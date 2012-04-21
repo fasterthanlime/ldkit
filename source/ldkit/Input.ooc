@@ -7,7 +7,7 @@ import structs/[ArrayList]
 import sdl/[Sdl, Event]
 
 // game deps
-import ld/Math // for Vec2
+import ldkit/Math // for Vec2
 
 LEvent: class {
     // base class for all events
