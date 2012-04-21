@@ -38,7 +38,6 @@ Display: class {
             sdlSurface@ w, sdlSurface@ h, sdlSurface@ pitch)
 
         cairoContext = Context new(cairoSurface)
-
     }
 
 }

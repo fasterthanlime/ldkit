@@ -4,6 +4,8 @@ import text/json, text/json/Parser // yup, we have a pure ooc reader!
 import structs/[ArrayList, HashBag, Bag]
 import io/FileReader
 
+import Math
+
 /**
  * Helpers to load stuff from JSON
  */
