@@ -111,6 +111,14 @@ Proxy: abstract class {
         listener
     }
 
+    onExit: func (cb: Func) {
+        onEvent(|ev|
+            match (ev) {
+                case xv: ExitEvent => cb()
+            }
+        )
+    }
+
     onKeyPress: func (which: UInt, cb: Func) {
         onEvent(|ev|
             match (ev) {
@@ -315,7 +323,7 @@ Input: class extends Proxy {
 
     _keyPressed: func (keyval: Int) {
         if(debug) {
-            logger debug("Key pressed! it's state %d, key %u" format(keyval))
+            logger debug("Key pressed! code %d" format(keyval))
         }
         if (keyval < MAX_KEY) {
             keyState[keyval] = true
