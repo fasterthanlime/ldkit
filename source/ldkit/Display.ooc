@@ -44,6 +44,10 @@ Display: class {
         cairoContext = Context new(cairoSurface)
     }
 
+    hideCursor: func {
+        SDL showCursor(0) 
+    }
+
     getWidth: func -> Int {
         width
     }

@@ -155,6 +155,15 @@ Proxy: abstract class {
         )
     }
 
+    onMouseMove: func (cb: Func) {
+        onEvent(|ev|
+            match (ev) {
+                case mm: MouseMotion =>
+                    cb()
+            }
+        )
+    }
+
     onMouseDrag: func (which: UInt, cb: Func) {
         onEvent(|ev|
             match (ev) {
