@@ -22,6 +22,7 @@ Sprite: class {
     offset := vec2(0.0, 0.0)
     scale := vec2(1.0, 1.0)
     color := vec3(1.0, 0.0, 0.0)
+    parent: This
 
     alpha := 1.0
     visible := true
@@ -65,6 +66,30 @@ Sprite: class {
         // nothing to do here, but for text sprites etc., might be useful
     }
 
+    absolutePos: Vec2 {
+        get {
+            if (parent) {
+                // wtf but okay.
+                pap := parent absolutePos
+                if (!pap) pap = parent pos
+                pap add(pos)
+            } else {
+                pos
+            }
+        }
+    }
+
+    containsPoint: func(point: Vec2) -> Bool {
+        // override with your own implementation
+        false
+    }
+
+    rectangleContains: func (min, max, point: Vec2) -> Bool {
+        result := (min x <= point x && max x >= point x && min y <= point y && max y >= point y)
+        //"is %s inside (%s, %s) ? %d" printfln(point _, min _, max _, result)
+        result
+    }
+    
 }
 
 ImageSprite: class extends Sprite {
@@ -109,6 +134,11 @@ ImageSprite: class extends Sprite {
         cr setSourceRGB(1.0, 0.0, 0.0)
         cr setFontSize(80)
         cr showText("MISSING IMAGE %s" format(path))
+    }
+
+    containsPoint: func(point: Vec2) -> Bool {
+        ap := absolutePos
+        rectangleContains(ap, ap add(width, height), point)
     }
 
 }
@@ -210,7 +240,6 @@ LabelSprite: class extends Sprite {
 
 }
 
-
 GroupSprite: class extends Sprite {
 
     children := ArrayList<Sprite> new()
@@ -234,6 +263,7 @@ GroupSprite: class extends Sprite {
 
     add: func (s: Sprite) {
         children add(s)
+        s parent = this
     }
 
 }
@@ -266,6 +296,12 @@ RectSprite: class extends Sprite {
         } else {
             cr stroke()
         }
+    }
+
+    containsPoint: func(point: Vec2) -> Bool {
+        ap := absolutePos
+        halfSize := size mul(0.5)
+        rectangleContains(ap sub(halfSize), ap add(halfSize), point)
     }
 
 }
