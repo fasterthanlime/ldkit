@@ -105,7 +105,6 @@ vec2: func ~square (xy: Float) -> Vec2 { Vec2 new(xy, xy) }
 vec2: func ~clone (v: Vec2) -> Vec2 { Vec2 new(v x, v y) }
 vec: func ~two (x, y: Float) -> Vec2 { Vec2 new(x, y) }
 
-
 /**
  * A 3-dimensional vector class with a few
  * utility things.
@@ -125,6 +124,19 @@ Vec3: class {
     squaredNorm: func -> Float {
         x * x + y * y + z * z
     }
+
+    set!: func (v: This) {
+        x = v x
+        y = v y
+        z = v z
+    }
+
+    set!: func ~threefloats (px, py, pz: Float) {
+        x = px
+        y = py
+        z = pz
+    }
+
 
     interpolate: func (target: This, alpha: Float) {
         (x, y, z) = (x * (1 - alpha) + target x * alpha,

@@ -4,12 +4,20 @@
  */
 
 use cairo
-import cairo/Cairo
+import cairo/[Cairo, CairoFT]
+
+use freetype2
+import freetype2
+
+use deadlogger
+import deadlogger/Log
 
 import Math, Display
+import structs/[HashMap, ArrayList]
 
 Sprite: class {
 
+    logger := static Log getLogger(This name)
     pos := vec2(0.0, 0.0)
     offset := vec2(0.0, 0.0)
     scale := vec2(1.0, 1.0)
@@ -59,5 +67,206 @@ Sprite: class {
 
 }
 
+ImageSprite: class extends Sprite {
 
+    tiled := false
+
+    width  := -1
+    height := -1
+
+    path: String
+
+    init: func ~ohshutuprock {}
+
+    new: static func (pos: Vec2, path: String) -> This {
+        low := path toLower()
+        if (low endsWith?(".png")) {
+            PngSprite new(pos, path)
+        } else {
+            Exception new("Unknown image type (not PNG): %s" format(path)) throw()
+            null
+        }
+    }
+
+    paint: func (cr: Context) {
+        if (tiled) {
+            for (x in -3..3) {
+                for (y in -3..3) {
+                    cr save()
+                    cr translate (x * (width - 1), y * (height - 1))
+                    paintOnce(cr)
+                    cr restore()
+                }
+            }
+        } else {
+            cr save()
+            paintOnce(cr)
+            cr restore()
+        }
+    }
+
+    paintOnce: func (cr: Context) {
+        cr setSourceRGB(1.0, 0.0, 0.0)
+        cr setFontSize(80)
+        cr showText("MISSING IMAGE %s" format(path))
+    }
+
+}
+
+PngSprite: class extends ImageSprite {
+
+    image: ImageSurface
+    imageCache := static HashMap<String, ImageSurface> new()
+
+    init: func (=pos, =path) {
+        if(imageCache contains?(path)) {
+            image = imageCache get(path)
+        } else {
+            image = ImageSurface new(path)
+            logger debug("Loaded png asset %s (%dx%d)" format(path, image getWidth(), image getHeight()))
+            imageCache put(path, image)
+        }
+
+        width  = image getWidth()
+        height = image getHeight()
+    }
+
+    paintOnce: func (cr: Context) {
+        cr setSourceSurface(image, 0, 0)
+        cr rectangle(0, 0, width, height)
+        cr clip()
+        if (alpha == 1.0) {
+            cr paint()
+        } else {
+            cr paintWithAlpha(alpha)
+        }
+    }
+
+}
+
+
+// initialize freetype
+freetype: FTLibrary
+freetype initFreeType()
+
+/**
+ * A label that displays text
+ */
+LabelSprite: class extends Sprite {
+
+    text: String
+    fontSize := 22.0
+
+    font: FontFace
+    path := "assets/fonts/impact.ttf"
+    oldPath := ""
+    cache := static HashMap<String, FontFace> new()
+
+    centered := false
+
+    init: func (=pos, =text) { }
+
+    setText: func (=text) {}
+
+    loadFont: func {
+        version(!apple) {
+            if (cache contains?(path)) {
+                font = cache get(path)
+            } else {
+                logger debug("Loading font asset %s" format(path))
+                ftFace: FTFace
+                error := freetype newFace(path, 0, ftFace&)
+                if (error) {
+                    logger warn("Loading font failed, falling back on default font")
+                } else {
+                    font = newFontFromFreetype(ftFace, 0)
+                    cache put(path, font)
+                }
+            }
+
+            oldPath = path
+        }
+    }
+
+    paint: func (cr: Context) {
+        if (oldPath != path) loadFont()
+
+        cr newSubPath()
+        if (font) {
+            cr setFontFace(font)
+        } else {
+            cr selectFontFace("Impact", CairoFontSlant NORMAL, CairoFontWeight NORMAL)
+        }
+        cr setFontSize(fontSize)
+
+        if (centered) {
+            extents: TextExtents
+            cr textExtents(text, extents&)
+            cr translate (-extents width / 2, extents height / 2)
+        }
+
+        cr showText(text)
+    }
+
+}
+
+
+GroupSprite: class extends Sprite {
+
+    children := ArrayList<Sprite> new()
+
+    init: func {
+        super(vec2(0, 0))
+    }
+
+    draw: func (display: Display) {
+        if (!visible) return
+
+        cr := display cairoContext
+
+        cr save()
+        cr translate(pos x + offset x, pos y + offset y)
+        cr scale(scale x, scale y)
+
+        children each(|child| child draw(display))
+        cr restore()
+    }
+
+    add: func (s: Sprite) {
+        children add(s)
+    }
+
+}
+
+
+
+/**
+ * A rectangle, initially a 1x1 square
+ */
+RectSprite: class extends Sprite {
+
+    init: super func
+
+    size := vec2(1.0, 1.0)
+    filled := true
+    thickness := 1.0
+
+    paint: func (cr: Context) {
+        halfWidth  := size x * 0.5
+        halfHeight := size y * 0.5
+
+        cr setLineWidth(thickness)
+        cr moveTo(-halfWidth, -halfHeight)
+        cr lineTo( halfWidth, -halfHeight)
+        cr lineTo( halfWidth,  halfHeight)
+        cr lineTo(-halfWidth,  halfHeight)
+        cr closePath()
+        if (filled) {
+            cr fill()
+        } else {
+            cr stroke()
+        }
+    }
+
+}
 
