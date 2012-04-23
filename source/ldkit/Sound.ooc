@@ -41,7 +41,7 @@ Source: class {
     update: func {
         if(getState() == SourceState STOPPED) {
             if(autofree) {
-                "Freeing source %d, because already stopped" printfln(sourceID)
+                // "Freeing source %d, because already stopped" printfln(sourceID)
                 boombox freeSource(this)
             } else if (loop) {
                 "Looping source %d" printfln(sourceID)
