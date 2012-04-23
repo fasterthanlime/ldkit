@@ -276,6 +276,32 @@ GroupSprite: class extends Sprite {
 }
 
 
+/**
+ * An ellipsoid, initially a 1x1 circle
+ */
+EllipseSprite: class extends Sprite {
+
+    radius := 15.0
+    filled := true
+    thickness := 3.0
+
+    init: func (=pos) {}
+
+    paint: func (cr: Context) {
+        // full circle!
+        cr setLineWidth(thickness)
+        cr newSubPath()
+        cr arc(0.0, 0.0, radius, 0.0, 3.142 * 2)
+
+        if (filled) {
+            cr fill()
+        } else {
+            cr stroke()
+        }
+    }
+
+}
+
 LineSprite: class extends Sprite {
 
     start := vec2(0)

@@ -72,11 +72,11 @@ Vec2: class {
         new(x + v x, y + v y)
     }
 
-    add: func ~floats (px, py: Int) -> This {
+    add: func ~floats (px, py: Float) -> This {
         new(x + px, y + py)
     }
 
-    sub: func ~floats (px, py: Int) -> This {
+    sub: func ~floats (px, py: Float) -> This {
         new(x - px, y - py)
     }
 

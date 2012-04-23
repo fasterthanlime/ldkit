@@ -21,11 +21,10 @@ Source: class {
     init: func (=boombox, =sample, =autofree) {
         alGenSources(1, sourceID&)
 
-        alSourcei(sourceID, AL_BUFFER, sample bufferID)
-        //"Associated source %d with buffer %d" printfln(sourceID, sample bufferID)
-        
+        "Queueing %d buffers" printfln(sample bufferIDs size)
+        alSourceQueueBuffers(sourceID, sample bufferIDs size, sample bufferIDs toArray())
+
         alSource3f(sourceID, AL_POSITION, 0.0, 0.0, 0.0)
-        //"Positioned source %d" printfln(sourceID)
     }
 
     getState: func -> SourceState {
@@ -57,15 +56,11 @@ Source: class {
 
 }
 
-SAMPLE_BUFFER_SIZE := static (16 * 1024 * 1024) // 4 KB buffe
+TINY_BUFFER_SIZE := 4096
 
 // a sound loaded from a file
 Sample: class {
-
-    array := static Octet[SAMPLE_BUFFER_SIZE] new() // Local fixed size array
-    buffer := Buffer new(SAMPLE_BUFFER_SIZE) // The sound buffer data from file
-
-    bufferID: ALuint        // OpenAL sound buffer ID
+    bufferIDs := ArrayList<ALuint> new()
     format: ALformat
     freq: ALsizei
      
@@ -73,24 +68,17 @@ Sample: class {
 
     // loads the sample
     init: func (=path) {
-        alGenBuffers(1, bufferID&)
-
         if (path endsWith?(".ogg")) {
             loadOgg(path)
         } else {
             Exception new("Cannot load %s file, unknown format (only OGG is supported)" format(path)) throw()
         }
 
-        // Upload sound data to buffer
-        alBufferData(bufferID, format, buffer data, buffer size as ALsizei, freq)
-
-        //"Uploaded %d bytes of data to buffer %d" printfln(buffer size as ALsizei, bufferID)
     }
 
     // This function loads a .ogg file into a memory buffer and returns
     // the format and frequency.
     loadOgg: func (fileName: String) {
-        
         endian := 0 // 0 for little endian, 1 for big endian
         
         // Open for binary reading
@@ -117,18 +105,21 @@ Sample: class {
         // The frequency of the sampling rate
         freq = pInfo@ rate
 
-        // Keep reading until all is read
+        buffer: Char* = gc_malloc(TINY_BUFFER_SIZE)
+        bufferID: ALuint
+
         bitStream: Int
         totalSize := 0
         while (true) {
-            // Read up to a buffer's worth of decoded sound data
-            bytes := ov_read(oggFile&, array data, SAMPLE_BUFFER_SIZE, endian, 2, 1, bitStream&)
+            bytes := ov_read(oggFile&, buffer, TINY_BUFFER_SIZE, endian, 2, 1, bitStream&)
             totalSize += bytes
 
             match {
                 case bytes > 0 =>
-                    // append to buffer
-                    buffer append(array data, bytes)
+                    // create a new buffer
+                    alGenBuffers(1, bufferID&)
+                    bufferIDs add(bufferID)
+                    alBufferData(bufferID, format, buffer, bytes, freq)
                 case bytes < 0 =>
                     // something wrong happened
                     ov_clear(oggFile&)
@@ -140,11 +131,12 @@ Sample: class {
         }
 
         // Clean up!
+        gc_free(buffer)
         ov_clear(oggFile&)
     }
 
     free: func {
-        alDeleteBuffers(1, bufferID&)
+        alDeleteBuffers(bufferIDs size, bufferIDs toArray())
     }
 
 }
