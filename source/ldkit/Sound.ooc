@@ -21,7 +21,6 @@ Source: class {
     init: func (=boombox, =sample, =autofree) {
         alGenSources(1, sourceID&)
 
-        "Queueing %d buffers" printfln(sample bufferIDs size)
         alSourceQueueBuffers(sourceID, sample bufferIDs size, sample bufferIDs toArray())
 
         alSource3f(sourceID, AL_POSITION, 0.0, 0.0, 0.0)
@@ -168,6 +167,15 @@ Boombox: class {
             s := Sample new(aPath)
             cache put(aPath, s)
             s
+        }
+    }
+
+    update: func {
+        i := 0
+        while (i < sources size) {
+            // weird way to iterate because we remove sources
+            sources[i] update()
+            i += 1
         }
     }
 
