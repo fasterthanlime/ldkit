@@ -12,8 +12,11 @@ import freetype2
 use deadlogger
 import deadlogger/Log
 
-import Math, Display
+import io/File
 import structs/[HashMap, ArrayList]
+
+// libs deps
+import Math, Display
 
 Sprite: class {
 
@@ -104,6 +107,10 @@ ImageSprite: class extends Sprite {
     init: func ~ohshutuprock {}
 
     new: static func (pos: Vec2, path: String) -> This {
+        if (!File new(path) exists?()) {
+            Exception new("Image file %s doesn't exist! Aborting." format(path)) throw()
+        }
+
         low := path toLower()
         if (low endsWith?(".png")) {
             PngSprite new(pos, path)

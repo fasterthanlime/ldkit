@@ -1,5 +1,5 @@
-use    openal, alut, vorbis
-import openal, alut, vorbis, os/Time, io/File, structs/[ArrayList, HashMap]
+use    openal, alut, vorbis, deadlogger
+import openal, alut, vorbis, os/Time, io/File, structs/[ArrayList, HashMap], deadlogger/Log
 
 SourceState: enum {
     STOPPED
@@ -139,8 +139,6 @@ Sample: class {
             }
         }
 
-        "Finished loading file %s, %d bytes long" printfln(fileName, totalSize)
-
         // Clean up!
         ov_clear(oggFile&)
     }
@@ -154,6 +152,7 @@ Sample: class {
 // a sound system :D
 Boombox: class {
     
+    logger := static Log getLogger("boombox")
     cache := HashMap<String, Sample> new()
     sources := ArrayList<Source> new()
 
@@ -163,10 +162,9 @@ Boombox: class {
         arg := "establichment" as Char*
 
         alutInit(argc&, arg&)
-        //"OpenAL initialized." println()
 
         alListener3f(AL_POSITION, 0.0, 0.0, 0.0)
-        //"Listener positioned." println()
+        logger info("Sound system initialized")
     }
 
     load: func (path: String) -> Sample {
@@ -174,7 +172,7 @@ Boombox: class {
         if (cache contains?(aPath)) {
             cache get(aPath)
         } else {
-            //"Loading %s" printfln(path)
+            logger info("Loading audio file... %s" format(path))
             s := Sample new(aPath)
             cache put(aPath, s)
             s
@@ -182,7 +180,6 @@ Boombox: class {
     }
 
     play: func (s: Sample) -> Source {
-        //"Playing %s" printfln(s path)
         src := Source new(this, s, true)
         src play()
         src
