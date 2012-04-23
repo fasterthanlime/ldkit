@@ -11,6 +11,7 @@ Source: class {
     boombox: Boombox
     sample: Sample
     autofree: Bool
+    loop := false
 
     state := SourceState PLAYING
 
@@ -38,9 +39,14 @@ Source: class {
     }
 
     update: func {
-        if(autofree && getState() == SourceState STOPPED) {
-            //"Freeing source %d, because already stopped" printfln(sourceID)
-            boombox freeSource(this)
+        if(getState() == SourceState STOPPED) {
+            if(autofree) {
+                "Freeing source %d, because already stopped" printfln(sourceID)
+                boombox freeSource(this)
+            } else if (loop) {
+                "Looping source %d" printfln(sourceID)
+                play()
+            }
         }
     }
 
@@ -179,8 +185,17 @@ Boombox: class {
         }
     }
 
+    loop: func (s: Sample) -> Source {
+        src := Source new(this, s, false)
+        sources add(src)
+        src loop = true
+        src play()
+        src
+    }
+
     play: func (s: Sample) -> Source {
         src := Source new(this, s, true)
+        sources add(src)
         src play()
         src
     }
