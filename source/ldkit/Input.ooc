@@ -357,13 +357,17 @@ Input: class extends Proxy {
     }
 
     _mousePressed: func (button: Int) {
-        logger debug("Mouse pressed at %s" format(_mousepos _))
+        if(debug) {
+            logger debug("Mouse pressed at %s" format(_mousepos _))
+        }
         buttonState[button] = true
         _notifyListeners(MousePress new(_mousepos, button))
     }
 
     _mouseReleased: func (button: Int) {
-        logger debug("Mouse released at %s" format(_mousepos _))
+        if(debug) {
+            logger debug("Mouse released at %s" format(_mousepos _))
+        }
         buttonState[button] = false
         _notifyListeners(MouseRelease new(_mousepos, button))
     }
