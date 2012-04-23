@@ -2,6 +2,8 @@
 // libs deps
 import math
 
+EPSILON := 0.001
+
 /**
  * A 2-dimensional vector class with a few
  * utility things.
@@ -52,6 +54,16 @@ Vec2: class {
         y = py
     }
 
+    snap: func (size: Int) -> This {
+        ix := x as Int
+        iy := y as Int
+
+        ix = ix - (ix % size)
+        iy = iy - (iy % size)
+        result := vec2(ix, iy)
+        result
+    }
+
     sub: func (v: This) -> This {
         new(x - v x, y - v y)
     }
@@ -75,6 +87,12 @@ Vec2: class {
 
     perp: func -> This {
         new(y, -x)
+    }
+
+    projected: func (v: This) -> This {
+        p := clone()
+        p project!(v)
+        p
     }
    
     project!: func (v: This) {
@@ -144,7 +162,6 @@ Vec3: class {
         y = py
         z = pz
     }
-
 
     interpolate: func (target: This, alpha: Float) {
         (x, y, z) = (x * (1 - alpha) + target x * alpha,

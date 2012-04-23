@@ -100,6 +100,10 @@ Proxy: abstract class {
 
     enabled := true
 
+    unsubscribe: func (l: Listener) -> Bool {
+        listeners remove(l)
+    }
+
     /**
      * Register for an event listener. You can
      * then match on its type to see which event
@@ -111,7 +115,7 @@ Proxy: abstract class {
         listener
     }
 
-    onExit: func (cb: Func) {
+    onExit: func (cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case xv: ExitEvent => cb()
@@ -119,7 +123,7 @@ Proxy: abstract class {
         )
     }
 
-    onKeyPress: func (which: UInt, cb: Func) {
+    onKeyPress: func (which: UInt, cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case kp: KeyPress => 
@@ -128,7 +132,7 @@ Proxy: abstract class {
         )
     }
 
-    onKeyRelease: func (which: UInt, cb: Func) {
+    onKeyRelease: func (which: UInt, cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case kr: KeyRelease => 
@@ -137,7 +141,7 @@ Proxy: abstract class {
         )
     }
 
-    onMousePress: func (which: UInt, cb: Func) {
+    onMousePress: func (which: UInt, cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case mp: MousePress =>
@@ -146,7 +150,7 @@ Proxy: abstract class {
         )
     }
 
-    onMouseRelease: func (which: UInt, cb: Func) {
+    onMouseRelease: func (which: UInt, cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case mp: MouseRelease =>
@@ -155,7 +159,7 @@ Proxy: abstract class {
         )
     }
 
-    onMouseMove: func (cb: Func) {
+    onMouseMove: func (cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case mm: MouseMotion =>
@@ -164,7 +168,7 @@ Proxy: abstract class {
         )
     }
 
-    onMouseDrag: func (which: UInt, cb: Func) {
+    onMouseDrag: func (which: UInt, cb: Func) -> Listener {
         onEvent(|ev|
             match (ev) {
                 case mm: MouseMotion =>

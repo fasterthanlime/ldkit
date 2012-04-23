@@ -276,6 +276,26 @@ GroupSprite: class extends Sprite {
 }
 
 
+LineSprite: class extends Sprite {
+
+    start := vec2(0)
+    end   := vec2(200)
+    thickness := 3.0
+
+    init: func {
+        super(vec2(0))
+    }
+
+    paint: func (cr: Context) {
+        cr setLineWidth(thickness)
+        cr moveTo(start x, start y)
+        cr lineTo(end x, end y)
+        cr closePath()
+        cr stroke()
+    }
+
+}
+
 
 /**
  * A rectangle, initially a 1x1 square
