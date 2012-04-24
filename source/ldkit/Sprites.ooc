@@ -16,7 +16,7 @@ import io/File
 import structs/[HashMap, ArrayList]
 
 // libs deps
-import Math, Display
+import ldkit/[Math, Display]
 
 Sprite: class {
 
@@ -201,7 +201,7 @@ LabelSprite: class extends Sprite {
 
     centered := false
 
-    init: func (=pos, =text) { }
+    init: func (=pos, =text)
 
     setText: func (=text) {}
 

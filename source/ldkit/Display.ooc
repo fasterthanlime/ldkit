@@ -9,7 +9,7 @@ import zombieconfig
 import sdl/[Sdl, Event, Video]
 import gobject
 
-import Math
+import ldkit/Math
 
 Display: class {
 
