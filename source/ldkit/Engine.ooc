@@ -1,5 +1,5 @@
 
-import UI, Timing
+import UI, Timing, Actor
 
 import structs/[ArrayList]
 
@@ -9,6 +9,8 @@ import zombieconfig
 Engine: class {
 
     ui: UI
+
+    actors := ArrayList<Actor> new()
 
     FPS := 30.0 // let's target 30FPS
 
@@ -25,6 +27,7 @@ Engine: class {
             ticks = LTime getTicks()
 
             ui update()
+	    actors each(|a| a update(delta))
 
             // teleport ourselves in the future when the next frame is due
             roadToFuture := ticks + delta - LTime getTicks()
@@ -32,6 +35,14 @@ Engine: class {
                 LTime delay(roadToFuture)
             }
         }
+    }
+
+    add: func (actor: Actor) {
+	actors add(actor)
+    }
+
+    onTick: func (f: Func (Float)) {
+	actors add(ActorClosure new(f))
     }
 
 }

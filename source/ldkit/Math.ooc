@@ -85,6 +85,11 @@ Vec2: class {
         y += v y
     }
 
+    add!: func ~floats (px, py: Float) {
+	x += px
+	y += py
+    }
+
     perp: func -> This {
         new(y, -x)
     }

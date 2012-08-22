@@ -9,6 +9,7 @@ import Pass
 import deadlogger/Log
 import zombieconfig
 import os/Time
+import sdl/Sdl
 
 UI: class {
 
@@ -139,9 +140,14 @@ UI: class {
         // it's a better practice to turn on debug locally
         //input debug = true
 
+	input onKeyPress(Keys ESC, ||
+	    SDL quit()
+	    exit(0)
+	)
+
         input onExit(||
-            // just exit bluntly. Let's rely on the OS to free all the resources :D
-            exit(0)
+	    SDL quit()
+	    exit(0)
         )
     }
 
