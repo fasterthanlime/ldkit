@@ -41,6 +41,10 @@ Engine: class {
 	actors add(actor)
     }
 
+    remove: func (actor: Actor) {
+	actors remove(actor)
+    }
+
     onTick: func (f: Func (Float)) {
 	actors add(ActorClosure new(f))
     }

@@ -55,17 +55,24 @@ Vec2: class {
     }
 
     snap: func (size: Int) -> This {
-        ix := x as Int
-        iy := y as Int
+	ix := round(x / size as Float) * size
+	iy := round(y / size as Float) * size
 
-        ix = ix - (ix % size)
-        iy = iy - (iy % size)
-        result := vec2(ix, iy)
-        result
+        vec2(ix, iy)
     }
 
     sub: func (v: This) -> This {
         new(x - v x, y - v y)
+    }
+
+    sub!: func (v: This) {
+	x -= v x
+	y -= v y
+    }
+
+    sub!: func ~floats (px, py: Float) {
+	x -= px
+	y -= py
     }
 
     add: func (v: This) -> This {
