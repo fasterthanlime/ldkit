@@ -386,6 +386,8 @@ Input: class extends Proxy {
 Keys: enum from Int {
     LEFT  = SDLK_LEFT
     RIGHT = SDLK_RIGHT
+    UP    = SDLK_UP
+    DOWN  = SDLK_DOWN
     SPACE = SDLK_SPACE
     ENTER = SDLK_RETURN
     F1    = SDLK_F1

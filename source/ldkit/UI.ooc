@@ -3,7 +3,7 @@ use gobject, cairo, sdl, deadlogger, ldkit
 
 // game deps
 import Display, Input, Math, Sprites, Sound, Engine
-import Pass
+import Pass, FlashMessages
 
 // libs deps
 import deadlogger/Log
@@ -75,14 +75,10 @@ UI: class {
     mousePass := Pass new(this, "mouse")
     cursor: GroupSprite
 
-    // flashMessages: FlashMessages
+    flashMessages: FlashMessages
 
     initPasses: func {
-        // flashMessages = FlashMessages new(this)
-
-        // temp code, no real art :'(
-        // bgPos := vec2(display getWidth() - 1920, display getHeight() - 1080)
-        // bgPass addSprite(ImageSprite new(bgPos, "assets/png/background-placeholder.png"))
+        flashMessages = FlashMessages new(this)
 
         // offset to make the hand correspond with the actual mouse
         cursorImage := ImageSprite new(vec2(-12, -10), "assets/png/cursor.png") 
@@ -122,12 +118,12 @@ UI: class {
     }
 
     flash: func (msg: String) {
-        // flashMessages push(msg)
+        flashMessages push(msg)
     }
 
     update: func {
         boombox update()
-        // flashMessages update()
+        flashMessages update()
 
         display clear()
         rootPass draw()

@@ -27,10 +27,10 @@ Box: class {
         maxy2 := y2 + other height
 
         // rule out quick cases first
-        if (maxx1 < minx2) return null
-        if (maxx2 < minx1) return null
-        if (maxy1 < miny2) return null
-        if (maxy2 < miny1) return null
+        if (maxx1 <= minx2) return null
+        if (maxx2 <= minx1) return null
+        if (maxy1 <= miny2) return null
+        if (maxy2 <= miny1) return null
     
         bangs := false
         b := Bang new()

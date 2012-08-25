@@ -25,6 +25,8 @@ Source: class {
         alSourceQueueBuffers(sourceID, sample bufferIDs size, sample bufferIDs toArray())
 
         alSource3f(sourceID, AL_POSITION, 0.0, 0.0, 0.0)
+	alSourcei(sourceID, AL_REFERENCE_DISTANCE, 1.0)
+	alSourcei(sourceID, AL_MAX_DISTANCE, 1000.0)
     }
 
     getState: func -> SourceState {

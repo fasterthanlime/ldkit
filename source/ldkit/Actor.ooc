@@ -4,7 +4,11 @@ Actor: class {
     init: func {}
 
     update: func (delta: Float) {
-	"Override Actor#update! (delta = %.2f)" printfln(delta)
+	"Override %s#update! (delta = %.2f)" printfln(class name, delta)
+    }
+
+    destroy: func {
+	"Override %s#destroy!" printfln(class name)
     }
 
 }
