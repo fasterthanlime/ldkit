@@ -2,6 +2,7 @@
 import UI, Timing, Actor
 
 import structs/[ArrayList]
+import sdl/Sdl
 
 use zombieconfig
 import zombieconfig
@@ -47,6 +48,11 @@ Engine: class {
 
     onTick: func (f: Func (Float)) {
 	actors add(ActorClosure new(f))
+    }
+
+    quit: func {
+	SDL quit()
+	exit(0)
     }
 
 }

@@ -137,13 +137,11 @@ UI: class {
         //input debug = true
 
 	input onKeyPress(Keys ESC, ||
-	    SDL quit()
-	    exit(0)
+	    engine quit()
 	)
 
         input onExit(||
-	    SDL quit()
-	    exit(0)
+	    engine quit()
         )
     }
 

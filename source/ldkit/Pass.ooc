@@ -9,6 +9,8 @@ Pass: class {
     ui: UI
     name: String // for debug
 
+    enabled: Bool { get set }
+
     parent: This // can be null (for root pass)
 
     passes := ArrayList<This> new()
@@ -20,18 +22,24 @@ Pass: class {
      * Constructor
      */
     init: func (=ui, =name) {
-        // not much here
+	enabled = true
     }
 
     reset: func {
         sprites each(|s| s free())
         sprites clear()
+	passes each(|p| p parent = null)
         passes clear()
     }
 
     addPass: func (pass: This) {
         passes add(pass)
         pass parent = this
+    }
+
+    removePass: func (pass: This) {
+	passes remove(pass)
+	pass parent = null
     }
 
     addSprite: func (sprite: Sprite) {
@@ -43,8 +51,10 @@ Pass: class {
     }
 
     draw: func {
-        sprites each(|s| s draw(ui display))
-        passes each(|p| p draw())
+	if (enabled) {
+	    sprites each(|s| s draw(ui display))
+	    passes each(|p| p draw())
+	}
     }
 
     toString: func -> String { if (parent) {
