@@ -120,6 +120,10 @@ ImageSprite: class extends Sprite {
         }
     }
 
+    center!: func {
+	offset set!(- (width * scale x) / 2, - (height * scale y) / 2)
+    }
+
     paint: func (cr: Context) {
         if (tiled) {
             for (x in -3..3) {
@@ -349,6 +353,10 @@ RectSprite: class extends Sprite {
         } else {
             cr stroke()
         }
+    }
+
+    center!: func {
+	offset set!(size mul(-0.5))
     }
 
     containsPoint: func(point: Vec2) -> Bool {

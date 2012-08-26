@@ -15,20 +15,26 @@ Engine: class {
 
     FPS := 30.0 // let's target 30FPS
 
+    slomo := false
+
     init: func(config: ZombieConfig) {
         ui = UI new(this, config)
     }
 
     run: func {
         ticks: Int
-        delta := 1000.0 / 30.0 // try 30FPS
+        delta := 1000.0 / FPS // try 30FPS
 
         // main loop
         while (true) {
             ticks = LTime getTicks()
 
+	    // two physics simulation
+	    actors each(|a| a update(delta * 0.5))
+	    if (!slomo) {
+		actors each(|a| a update(delta * 0.5))
+	    }
             ui update()
-	    actors each(|a| a update(delta))
 
             // teleport ourselves in the future when the next frame is due
             roadToFuture := ticks + delta - LTime getTicks()

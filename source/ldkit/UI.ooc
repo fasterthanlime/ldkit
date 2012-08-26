@@ -28,6 +28,8 @@ UI: class {
     // something we can control level loading with
     engine: Engine
 
+    escQuits := true
+
     /*
      * Constructors
      */
@@ -53,11 +55,6 @@ UI: class {
     initSound: func {
         logger info("Initializing sound system")
         boombox = Boombox new()
-
-        // bgMusic = boombox load("assets/music/quiet-dignity.ogg")
-        // boombox loop(bgMusic)
-
-        // criekSound = boombox load("assets/sounds/criek.ogg")
     }
 
     // different UI passes
@@ -137,7 +134,7 @@ UI: class {
         //input debug = true
 
 	input onKeyPress(Keys ESC, ||
-	    engine quit()
+	    if (escQuits) engine quit()
 	)
 
         input onExit(||
