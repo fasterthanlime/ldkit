@@ -30,9 +30,9 @@ Engine: class {
             ticks = LTime getTicks()
 
 	    // two physics simulation
-	    actors each(|a| a update(delta * 0.5))
+	    for(a in actors) a update(delta * 0.5)
 	    if (!slomo) {
-		actors each(|a| a update(delta * 0.5))
+		for(a in actors) a update(delta * 0.5)
 	    }
             ui update()
 
