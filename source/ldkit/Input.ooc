@@ -215,7 +215,7 @@ Proxy: abstract class {
         if (_grab) {
             _grab cb(ev)
         } else {
-            listeners each(|l| l cb(ev))
+	    for(l in listeners) l cb(ev)
         }
     }
 

@@ -268,7 +268,7 @@ GroupSprite: class extends Sprite {
         cr translate(pos x + offset x, pos y + offset y)
         cr scale(scale x, scale y)
 
-        children each(|child| child draw(display))
+	for (child in children) child draw(display)
         cr restore()
     }
 

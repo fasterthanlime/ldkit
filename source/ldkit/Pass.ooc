@@ -26,9 +26,9 @@ Pass: class {
     }
 
     reset: func {
-        sprites each(|s| s free())
+	for (s in sprites) s free()
         sprites clear()
-	passes each(|p| p parent = null)
+	for (p in passes) p parent = null
         passes clear()
     }
 
@@ -52,8 +52,8 @@ Pass: class {
 
     draw: func {
 	if (enabled) {
-	    sprites each(|s| s draw(ui display))
-	    passes each(|p| p draw())
+	    for (s in sprites) s draw(ui display)
+	    for (p in passes) p draw()
 	}
     }
 
