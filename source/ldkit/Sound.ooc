@@ -36,11 +36,13 @@ Source: class {
         match als {
             case AL_STOPPED => SourceState STOPPED
             case            => SourceState PLAYING
-            // TODO: handle other cases?
         }
     }
 
     update: func {
+	if (sample streaming) {
+	}
+
         if(getState() == SourceState STOPPED) {
             if(autofree) {
                 // "Freeing source %d, because already stopped" printfln(sourceID)
@@ -73,8 +75,10 @@ Sample: class {
      
     path: String
 
+    streaming: Bool
+
     // loads the sample
-    init: func (=path) {
+    init: func (=path, =streaming) {
         if (path endsWith?(".ogg")) {
             loadOgg(path)
         } else {
@@ -172,7 +176,7 @@ Boombox: class {
             cache get(aPath)
         } else {
             logger info("Loading audio file... %s" format(path))
-            s := Sample new(aPath)
+            s := Sample new(aPath, false)
             cache put(aPath, s)
             s
         }

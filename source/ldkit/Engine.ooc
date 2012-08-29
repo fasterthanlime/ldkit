@@ -30,9 +30,10 @@ Engine: class {
             ticks = LTime getTicks()
 
 	    // two physics simulation
-	    for(a in actors) a update(delta * 0.5)
+	    updateActors(delta * 0.5)
+
 	    if (!slomo) {
-		for(a in actors) a update(delta * 0.5)
+		updateActors(delta * 0.5)
 	    }
             ui update()
 
@@ -42,6 +43,16 @@ Engine: class {
                 LTime delay(roadToFuture)
             }
         }
+    }
+
+    updateActors: func (realDelta: Float) {
+	iter := actors iterator()
+	while (iter hasNext?()) {
+	    actor := iter next()
+	    if (actor update(realDelta)) {
+		iter remove()
+	    }
+	}
     }
 
     add: func (actor: Actor) {

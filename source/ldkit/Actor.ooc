@@ -3,7 +3,7 @@ Actor: class {
 
     init: func {}
 
-    update: func (delta: Float) {
+    update: func (delta: Float) -> Bool {
 	"Override %s#update! (delta = %.2f)" printfln(class name, delta)
     }
 
@@ -21,7 +21,7 @@ ActorClosure: class extends Actor {
 
     }
 
-    update: func (delta: Float) {
+    update: func (delta: Float) -> Bool {
 	f(delta)
     }
 
