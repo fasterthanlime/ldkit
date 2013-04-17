@@ -1,5 +1,5 @@
 
-import Math
+import ldkit/[Math]
 
 Colors: class {
     

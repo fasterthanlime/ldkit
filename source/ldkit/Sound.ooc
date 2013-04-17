@@ -16,10 +16,6 @@ Source: class {
     loop := false
 
     BURST := static 64
-
-    state := SourceState PLAYING
-
-    state: ALint // state of the sound source
         
     sourceID: ALuint // OpenAL sound source ID
     
@@ -119,7 +115,7 @@ Sample: class {
     // internal state
     fstream: FStream
     endian: Int
-    oggFile: OggFile
+    oggFile: _OggFile
     pInfo: VorbisInfo*
     buffer: Char*
     hasNext := true

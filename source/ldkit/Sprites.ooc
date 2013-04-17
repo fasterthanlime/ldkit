@@ -52,7 +52,7 @@ Sprite: class {
      * This is the function you want to overload
      * when you have custom sprites
      */
-    paint: func (cr: Context) {
+    paint: func (cr: CairoContext) {
         cr setLineWidth(3)
 
         cr moveTo(0, 0)
@@ -124,7 +124,7 @@ ImageSprite: class extends Sprite {
 	offset set!(- (width * scale x) / 2, - (height * scale y) / 2)
     }
 
-    paint: func (cr: Context) {
+    paint: func (cr: CairoContext) {
         if (tiled) {
             for (x in -3..3) {
                 for (y in -3..3) {
@@ -141,7 +141,7 @@ ImageSprite: class extends Sprite {
         }
     }
 
-    paintOnce: func (cr: Context) {
+    paintOnce: func (cr: CairoContext) {
         cr setSourceRGB(1.0, 0.0, 0.0)
         cr setFontSize(80)
         cr showText("MISSING IMAGE %s" format(path))
@@ -156,14 +156,14 @@ ImageSprite: class extends Sprite {
 
 PngSprite: class extends ImageSprite {
 
-    image: ImageSurface
-    imageCache := static HashMap<String, ImageSurface> new()
+    image: CairoImageSurface
+    imageCache := static HashMap<String, CairoImageSurface> new()
 
     init: func (=pos, =path) {
         if(imageCache contains?(path)) {
             image = imageCache get(path)
         } else {
-            image = ImageSurface new(path)
+            image = CairoImageSurface new(path)
             logger debug("Loaded png asset %s (%dx%d)" format(path, image getWidth(), image getHeight()))
             imageCache put(path, image)
         }
@@ -172,7 +172,7 @@ PngSprite: class extends ImageSprite {
         height = image getHeight()
     }
 
-    paintOnce: func (cr: Context) {
+    paintOnce: func (cr: CairoContext) {
         cr setSourceSurface(image, 0, 0)
         cr rectangle(0, 0, width, height)
         cr clip()
@@ -188,7 +188,7 @@ PngSprite: class extends ImageSprite {
 
 // initialize freetype
 freetype: FTLibrary
-freetype initFreeType()
+freetype init()
 
 /**
  * A label that displays text
@@ -198,10 +198,10 @@ LabelSprite: class extends Sprite {
     text: String
     fontSize := 22.0
 
-    font: FontFace
+    font: CairoFontFace
     path := "assets/fonts/impact.ttf"
     oldPath := ""
-    cache := static HashMap<String, FontFace> new()
+    cache := static HashMap<String, CairoFontFace> new()
 
     centered := false
 
@@ -229,7 +229,7 @@ LabelSprite: class extends Sprite {
         }
     }
 
-    paint: func (cr: Context) {
+    paint: func (cr: CairoContext) {
         if (oldPath != path) loadFont()
 
         cr newSubPath()
@@ -241,7 +241,7 @@ LabelSprite: class extends Sprite {
         cr setFontSize(fontSize)
 
         if (centered) {
-            extents: TextExtents
+            extents: CairoTextExtents
             cr textExtents(text, extents&)
             cr translate (-extents width / 2, extents height / 2)
         }
@@ -291,7 +291,7 @@ EllipseSprite: class extends Sprite {
 
     init: func (=pos) {}
 
-    paint: func (cr: Context) {
+    paint: func (cr: CairoContext) {
         // full circle!
         cr setLineWidth(thickness)
         cr newSubPath()
@@ -316,7 +316,7 @@ LineSprite: class extends Sprite {
         super(vec2(0))
     }
 
-    paint: func (cr: Context) {
+    paint: func (cr: CairoContext) {
         cr setLineWidth(thickness)
         cr moveTo(start x, start y)
         cr lineTo(end x, end y)
@@ -338,7 +338,7 @@ RectSprite: class extends Sprite {
     filled := true
     thickness := 1.0
 
-    paint: func (cr: Context) {
+    paint: func (cr: CairoContext) {
         halfWidth  := size x * 0.5
         halfHeight := size y * 0.5
 

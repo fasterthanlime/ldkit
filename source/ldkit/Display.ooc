@@ -6,7 +6,7 @@ import deadlogger/Log
 import cairo/[Cairo] 
 import structs/[ArrayList]
 import zombieconfig
-import sdl/[Sdl, Event, Video]
+import sdl/[Core, Event]
 import gobject
 
 import ldkit/Math
@@ -14,8 +14,8 @@ import ldkit/Math
 Display: class {
 
     screen, sdlSurface: SdlSurface*
-    cairoSurface: ImageSurface
-    cairoContext: Context
+    cairoSurface: CairoImageSurface
+    cairoContext: CairoContext
 
     width, height: Int
 
@@ -32,20 +32,20 @@ Display: class {
             flags |= SDL_FULLSCREEN
         }
 
-        screen = SDLVideo setMode(width, height, 32, flags)
-        SDLVideo wmSetCaption(title, null)
+        screen = SDL setMode(width, height, 32, flags)
+        SDL wmSetCaption(title, null)
 
-        sdlSurface = SDLVideo createRgbSurface(SDL_HWSURFACE, width, height, 32,
+        sdlSurface = SDL createRgbSurface(SDL_HWSURFACE, width, height, 32,
             0x00FF0000, 0x0000FF00, 0x000000FF, 0)
 
-        cairoSurface = ImageSurface new(sdlSurface@ pixels, CairoFormat RGB24,
+        cairoSurface = CairoImageSurface new(sdlSurface@ pixels, CairoFormat RGB24,
             sdlSurface@ w, sdlSurface@ h, sdlSurface@ pitch)
 
-        cairoContext = Context new(cairoSurface)
+        cairoContext = CairoContext new(cairoSurface)
     }
 
     hideCursor: func {
-        SDL showCursor(0) 
+        SDL showCursor(false) 
     }
 
     getWidth: func -> Int {
@@ -68,8 +68,8 @@ Display: class {
     }
 
     blit: func {
-        SDLVideo blitSurface(sdlSurface, null, screen, null)
-        SDLVideo flip(screen)
+        SDL blitSurface(sdlSurface, null, screen, null)
+        SDL flip(screen)
     }
 
 }

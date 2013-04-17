@@ -4,7 +4,7 @@ use deadlogger
 // libs deps
 import deadlogger/Log
 import structs/[ArrayList]
-import sdl/[Sdl, Event]
+import sdl/[Core, Event]
 
 // game deps
 import ldkit/Math // for Vec2
@@ -87,7 +87,7 @@ Listener: class {
 
 Proxy: abstract class {
 
-    logger := static Log getLogger(This name)
+    logger := Log getLogger(This name)
 
     listeners := ArrayList<Listener> new()
     _grab: Listener
@@ -262,8 +262,6 @@ SubProxy: class extends Proxy {
 }
 
 Input: class extends Proxy {
-
-    logger := static Log getLogger(This name)
 
     MAX_KEY := static 65536
     keyState: Bool*

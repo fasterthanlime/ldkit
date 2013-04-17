@@ -2,7 +2,7 @@
 import UI, Timing, Actor
 
 import structs/[ArrayList]
-import sdl/Sdl
+import sdl/Core
 
 use zombieconfig
 import zombieconfig

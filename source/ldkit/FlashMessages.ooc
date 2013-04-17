@@ -1,7 +1,7 @@
 
 import structs/[Stack]
 
-import UI, Sprites, Math, Pass
+import ldkit/[UI, Sprites, Math, Pass]
 
 FlashMessages: class {
 

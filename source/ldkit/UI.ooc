@@ -2,14 +2,14 @@
 use gobject, cairo, sdl, deadlogger, ldkit
 
 // game deps
-import Display, Input, Math, Sprites, Sound, Engine
+import ldkit/[Display, Input, Math, Sprites, Sound, Engine]
 import Pass, FlashMessages
 
 // libs deps
 import deadlogger/Log
 import zombieconfig
 import os/Time
-import sdl/Sdl
+import sdl/Core
 
 UI: class {
 
